@@ -1,14 +1,9 @@
 /*World Format: items   -> array of {x,y,dy,dx,char}
                 field -> array of array of chars that represent deflectors, empty cells, or machines*/
 var world = {};
-world.items = [{x:0,y:2,dx:1,dy:0,char:'a'},{x:3,y:0,dx:0,dy:1,char:'b'}];
-world.field = ['******>**v'.split(''),
-               '**********'.split(''),
-               '******^**<'.split(''),
-               '**********'.split(''),
-               '**********'.split(''),
-               '**********'.split(''),
-               '**********'.split('')];
+world.items    = [{x:0,y:2,dx:1,dy:0,char:'a'},{x:3,y:0,dx:0,dy:1,char:'b'}];
+world.machines = [];
+world.field = [];
 
 /*Runs physics for one timestep given small time increments (dt)*/
 
@@ -37,7 +32,9 @@ var iterate = function(){
             world.items[i].dx =  1;
           }
           //change velocity based on /\-|
-          //absorb if machine
+          if(machines[cell]){
+            //TODO
+          }
         }
       }
     }
@@ -76,10 +73,21 @@ var init = function(){
 };
 
 var run = function(){
-  var out = grabData(main);
-  for(var i = 0; i < out.length;i++){
-    out[i] = out[i].split('');
+  var field = grabData(main);                //Pull cells of the div
+  for(var i = 0; i < field.length;i++){
+    field[i] = field[i].split('');
+    for(var j = 0; j < field[i].length;j++){ //Go through every cell
+      if(machines[field[i][j]]){             //and find if it is a machine
+        if(!world.machines[j]){              //then make sure there is a place to put it
+          world.machines[j]=[];
+        }
+        world.machines[j][i]={};             //then put it there
+      }
+    }
   }
-  world.field = out;
-  init();
+  world.field = field;
+  
+  init();                                    //Start the simulation
 };
+
+var machines = {C:1,U:1};
