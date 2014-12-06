@@ -20,10 +20,12 @@ main.onkeydown = function(e){
         break;
       case 40:            //down
         type('v');
-         break;
+        break;
     }
     if(e.keyCode > 64 && e.keyCode < 91){ //a = 65, z = 90
       //Pulverizer, etc ...
+      //if(!validate(e.keyCode))return;
+      type(String.fromCharCode(e.keyCode));
     }
   }
 };
@@ -34,13 +36,22 @@ var str = ['************************',
            '************************'];
 main.innerText = str.join('\n');
 
-/* replace character in front of the curssor with char and move the cursor forward*/
+/* grabs data from a text box */
+function grabData(element){
+  var tmp = element.childNodes, out = [];
+  for(var i = 0; i < tmp.length;i+=2){ // every other one is <br>
+    out[i/2] = tmp[i].data;            // get string data from text element
+  }
+  return out;
+}
+
+/* replace character in front of the cursor with char and move the cursor forward*/
 function type(char){
   var sel = window.getSelection();
   var str = sel.anchorNode.data;          //get internal text
   var off = sel.anchorOffset;             //get current index
   if(str.substring(off)){                 //make sure not at the end
-    sel.anchorNode.data = str.substring(0,off) + char +str.substring(off+1); //splice one character in where the cursor is
+    sel.anchorNode.data = str.substring(0,off) + char + str.substring(off+1); //splice one character in where the cursor is
     var range = document.createRange();   //create a new selection
     range.setStart(sel.anchorNode, off+1);
     range.setEnd(sel.anchorNode, off+1);
