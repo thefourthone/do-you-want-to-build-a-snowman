@@ -3,5 +3,9 @@
   src: url(UbuntuMono.ttf) format("truetype");
 }
 #main{
-  font-family: "mono"
+  font-family: "mono";
+}
+/*Makes Selection Invisible*/
+::selection {
+  background: #ffffff;
 }

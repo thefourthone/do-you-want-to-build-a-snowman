@@ -1,14 +1,40 @@
 var main = document.getElementById('main');
 main.onkeydown = function(e){
-  console.log(e.keyCode);
+  console.log(e);
   if(e.keyCode < 37 || e.keyCode > 40){
-    type(String.fromCharCode(e.keyCode))
     e.preventDefault();                     //prevent the defualt typing action
   }
+  if(e.shiftKey){
+    switch(e.keyCode){
+      case 32:            //space
+        type('*');
+        break;
+      case 37:            //left
+        type('<');
+        break;
+      case 38:            //up
+        type('^');
+        break;
+      case 39:            //right
+        type('>');
+        break;
+      case 40:            //down
+        type('v');
+         break;
+    }
+    if(e.keyCode > 64 && e.keyCode < 91){ //a = 65, z = 90
+      //Pulverizer, etc ...
+    }
+  }
 };
-var str = ['abcdef','ghijkl','mnopqr'];
+var str = ['************************',
+           '************************',
+           '************************',
+           '************************',
+           '************************'];
 main.innerText = str.join('\n');
 
+/* replace character in front of the curssor with char and move the cursor forward*/
 function type(char){
   var sel = window.getSelection();
   var str = sel.anchorNode.data;          //get internal text
