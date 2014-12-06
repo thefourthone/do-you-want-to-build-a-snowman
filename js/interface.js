@@ -13,12 +13,19 @@ var iterate = function(){
     t += dt;
     if(t >= TIMESTEP){                             //if past timestep take one step
       t -= TIMESTEP;
+      var toDel = [];
       for(var i = 0; i < world.items.length;i++){  //update foreach item
         world.items[i].x += world.items[i].dx;
         world.items[i].y += world.items[i].dy;
-        if(world.field[world.items[i].y][world.items[i].x] !== BLANK){//If cell is deflector or machine, it needs special attention
-          var cell = world.field[world.items[i].y][world.items[i].x];
-          if(cell === UP){
+        if(world.field[world.items[i].y][world.items[i].x] !== BLANK){ //If cell is deflector or machine, it needs special attention
+          var cell = world.field[world.items[i].y][world.items[i].x];  //For simplicity
+          
+          if(cell === 'C' && machines[cell].filter(world.items[i])){   //Move items into chest
+            toDel.push(i);
+            world.machines[world.items[i].x][world.items[i].y].inv.push(world.items[i]);
+          }
+          
+          if(cell === UP){         //handle arrows
             world.items[i].dy = -1;
             world.items[i].dx =  0;
           }else if(cell === DOWN){
@@ -32,10 +39,17 @@ var iterate = function(){
             world.items[i].dx =  1;
           }
           //change velocity based on /\-|
-          if(machines[cell]){
-            //TODO
+        }
+      }
+      for(var j = 0; j < world.machines.length;j++){                          //for every machine run the iterate function
+        for(var k = 0;world.machines[j] && k < world.machines[j].length;k++){
+          if(world.machines[j][k]&&machines[world.field[k][j]]){
+            machines[world.field[k][j]].iterate(world.machines[j][k]);
           }
         }
+      }
+      for(var h = toDel.length-1;h >= 0; h--){ //delete items picked up by the chests
+        world.items.splice(toDel[h],toDel[h]+1);
       }
     }
   };
@@ -62,7 +76,6 @@ var loop = function(){
   var curTime = Date.now();
   var deltaTime = curTime - prevTime;
   prevTime = curTime;
-  console.log(deltaTime/1000);
   iterate(world,deltaTime/1000);
   main.innerText = render(world);
   requestAnimationFrame(loop);
@@ -73,15 +86,15 @@ var init = function(){
 };
 
 var run = function(){
-  var field = grabData(main);                //Pull cells of the div
+  var field = grabData(main);                 //Pull cells of the div
   for(var i = 0; i < field.length;i++){
     field[i] = field[i].split('');
-    for(var j = 0; j < field[i].length;j++){ //Go through every cell
-      if(machines[field[i][j]]){             //and find if it is a machine
-        if(!world.machines[j]){              //then make sure there is a place to put it
+    for(var j = 0; j < field[i].length;j++){  //Go through every cell
+      if(machines[field[i][j]]){              //and find if it is a machine
+        if(!world.machines[j]){               //then make sure there is a place to put it
           world.machines[j]=[];
         }
-        world.machines[j][i]={};             //then put it there
+        world.machines[j][i]={x:j,y:i,inv:[]};//then put it there
       }
     }
   }
@@ -90,4 +103,41 @@ var run = function(){
   init();                                    //Start the simulation
 };
 
-var machines = {C:1,U:1};
+var machines = {C:{filter:function(item){return true},iterate:function(state){}},
+                U:{iterate:function(state){
+                  if(state.i){
+                    state.i++;
+                    if(state.i === 3){
+                      machines.throw(state,{char:'a'});
+                    }
+                    if(state.i === 5){
+                      machines.throw(state,{char:'b'});
+                    }
+                    if(state.i > 6){
+                       machines.throw(state,{char:'c'});
+                       state.i = 0;
+                    }
+                    return;
+                  }
+                  var inv = world.machines[state.x-1][state.y].inv;
+                  var a = -1,b = -1;
+                  for(var i = 0; i < inv.length;i++){
+                    if(inv[i].char === 'a'){
+                      a = i;
+                    }else if(inv[i].char === 'b'){
+                      b = i;
+                    }
+                  }
+                  if(a !== -1 && b !== -1){
+                    var t;
+                    if(a < b){ //make a the first one
+                      t = b;
+                      b = a;
+                      a = t;
+                    }
+                    inv.splice(a,a+1);
+                    inv.splice(b,b+1);
+                    state.i = 1;
+                  }
+                }},
+                throw:function(state,out){out.x = state.x+1;out.y = state.y;out.dy = 0;out.dx=1;world.items.push(out)}};

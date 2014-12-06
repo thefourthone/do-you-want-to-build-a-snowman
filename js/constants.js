@@ -1,2 +1,2 @@
 var TIMESTEP = .25;
-var UP = '^', DOWN = 'v', LEFT = '<', RIGHT = '>', BLANK = '*';
+var UP = '^', DOWN = 'v', LEFT = '<', RIGHT = '>', BLANK = '*', PIPE = '#';

@@ -21,6 +21,9 @@ main.onkeydown = function(e){
       case 40:            //down
         type(DOWN);
         break;
+      case 51:            //hash
+        type(PIPE);
+        break;
     }
     if(e.keyCode > 64 && e.keyCode < 91){ //a = 65, z = 90
       //TODO: Pulverizer, etc ...
@@ -30,8 +33,8 @@ main.onkeydown = function(e){
   }
 };
 var str = ['************************',
-           '***C********************',
-           '**CU********************',
+           '************************',
+           '***CU*******************',
            '************************',
            '************************'];
 main.innerText = str.join('\n');
