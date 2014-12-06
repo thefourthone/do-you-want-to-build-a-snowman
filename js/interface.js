@@ -1,14 +1,14 @@
 /*World Format: items   -> array of {x,y,dy,dx,char}
-                machine -> array of array of chars that represent deflectors, empty cells, or machines*/
+                field -> array of array of chars that represent deflectors, empty cells, or machines*/
 var world = {};
-world.items = [{x:0,y:2,dx:1,dy:0,char:'a'}];
-world.machine = ['******>**v'.split(''),
-                 '**********'.split(''),
-                 '******^**<'.split(''),
-                 '**********'.split(''),
-                 '**********'.split(''),
-                 '**********'.split(''),
-                 '**********'.split('')];
+world.items = [{x:0,y:2,dx:1,dy:0,char:'a'},{x:3,y:0,dx:0,dy:1,char:'b'}];
+world.field = ['******>**v'.split(''),
+               '**********'.split(''),
+               '******^**<'.split(''),
+               '**********'.split(''),
+               '**********'.split(''),
+               '**********'.split(''),
+               '**********'.split('')];
 
 /*Runs physics for one timestep given small time increments (dt)*/
 
@@ -21,10 +21,8 @@ var iterate = function(){
       for(var i = 0; i < world.items.length;i++){  //update foreach item
         world.items[i].x += world.items[i].dx;
         world.items[i].y += world.items[i].dy;
-        if(world.machine[world.items[i].y][world.items[i].x] !== BLANK){//If cell is deflector or machine, it needs special attention
-          //TODO:
-          //change velocity based on /\-|
-          var cell = world.machine[world.items[i].y][world.items[i].x];
+        if(world.field[world.items[i].y][world.items[i].x] !== BLANK){//If cell is deflector or machine, it needs special attention
+          var cell = world.field[world.items[i].y][world.items[i].x];
           if(cell === UP){
             world.items[i].dy = -1;
             world.items[i].dx =  0;
@@ -38,6 +36,7 @@ var iterate = function(){
             world.items[i].dy =  0;
             world.items[i].dx =  1;
           }
+          //change velocity based on /\-|
           //absorb if machine
         }
       }
@@ -48,13 +47,13 @@ var iterate = function(){
 /*Renders a game world*/
 var render = function(world){
   var out = [];
-  for(var j = 0; j < world.machine.length;j++){ //Deep Copy
-    out[j] = world.machine[j].slice(0);
+  for(var j = 0; j < world.field.length;j++){ //Deep Copy
+    out[j] = world.field[j].slice(0);
   }
   for(var i = 0; i < world.items.length;i++){   //update foreach item
     out[world.items[i].y][world.items[i].x] = world.items[i].char; //overwrite an item on the background
   }
-  for(j = 0; j < world.machine.length;j++){     //combine into string[]
+  for(j = 0; j < world.field.length;j++){     //combine into string[]
     out[j] = out[j].join('');
   }
   return out.join('\n');                        //combine into string
@@ -81,6 +80,6 @@ var run = function(){
   for(var i = 0; i < out.length;i++){
     out[i] = out[i].split('');
   }
-  world.machine = out;
+  world.field = out;
   init();
 };
