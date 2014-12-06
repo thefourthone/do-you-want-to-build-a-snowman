@@ -23,7 +23,7 @@ main.onkeydown = function(e){
         break;
     }
     if(e.keyCode > 64 && e.keyCode < 91){ //a = 65, z = 90
-      //Pulverizer, etc ...
+      //TODO: Pulverizer, etc ...
       //if(!validate(e.keyCode))return;
       type(String.fromCharCode(e.keyCode));
     }
