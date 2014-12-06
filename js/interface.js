@@ -2,16 +2,16 @@
                 machine -> array of array of chars that represent deflectors, empty cells, or machines*/
 var world = {};
 world.items = [{x:0,y:2,dx:1,dy:0,char:'a'}];
-world.machine = ['**********'.split(''),
+world.machine = ['******>**v'.split(''),
                  '**********'.split(''),
-                 '**********'.split(''),
+                 '******^**<'.split(''),
                  '**********'.split(''),
                  '**********'.split(''),
                  '**********'.split(''),
                  '**********'.split('')];
 
 /*Runs physics for one timestep given small time increments (dt)*/
-var TIMESTEP = 1;
+
 var iterate = function(){
   var t = 0;
   return function(world,dt){
@@ -21,9 +21,23 @@ var iterate = function(){
       for(var i = 0; i < world.items.length;i++){  //update foreach item
         world.items[i].x += world.items[i].dx;
         world.items[i].y += world.items[i].dy;
-        if(world.machine[world.items[i].y][world.items[i].x] !== '*'){//If cell is deflector or machine, it needs special attention
-          //TODO
-          //change velocity based on <>^V/\-|
+        if(world.machine[world.items[i].y][world.items[i].x] !== BLANK){//If cell is deflector or machine, it needs special attention
+          //TODO:
+          //change velocity based on /\-|
+          var cell = world.machine[world.items[i].y][world.items[i].x];
+          if(cell === UP){
+            world.items[i].dy = -1;
+            world.items[i].dx =  0;
+          }else if(cell === DOWN){
+            world.items[i].dy =  1;
+            world.items[i].dx =  0;
+          }else if(cell === LEFT){
+            world.items[i].dy =  0;
+            world.items[i].dx = -1;
+          }else if(cell === RIGHT){
+            world.items[i].dy =  0;
+            world.items[i].dx =  1;
+          }
           //absorb if machine
         }
       }
@@ -60,4 +74,13 @@ var loop = function(){
 var init = function(){
   prevTime = Date.now();
   loop();
+};
+
+var run = function(){
+  var out = grabData(main);
+  for(var i = 0; i < out.length;i++){
+    out[i] = out[i].split('');
+  }
+  world.machine = out;
+  init();
 };

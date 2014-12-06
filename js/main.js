@@ -7,19 +7,19 @@ main.onkeydown = function(e){
   if(e.shiftKey){
     switch(e.keyCode){
       case 32:            //space
-        type('*');
+        type(BLANK);
         break;
       case 37:            //left
-        type('<');
+        type(LEFT);
         break;
       case 38:            //up
-        type('^');
+        type(UP);
         break;
       case 39:            //right
-        type('>');
+        type(RIGHT);
         break;
       case 40:            //down
-        type('v');
+        type(DOWN);
         break;
     }
     if(e.keyCode > 64 && e.keyCode < 91){ //a = 65, z = 90
