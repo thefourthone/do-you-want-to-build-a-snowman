@@ -78,6 +78,7 @@ var loop = function(){
   prevTime = curTime;
   iterate(world,deltaTime/1000);
   main.innerText = render(world);
+  updateStorage();
   requestAnimationFrame(loop);
 };
 var init = function(){
@@ -141,3 +142,7 @@ var machines = {C:{filter:function(item){return true},iterate:function(state){}}
                   }
                 }},
                 throw:function(state,out){out.x = state.x+1;out.y = state.y;out.dy = 0;out.dx=1;world.items.push(out)}};
+
+var validate = function(key){
+  return parseInt(localStorage[String.fromCharCode(key)]) > 0;
+};

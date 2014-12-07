@@ -4,7 +4,19 @@
 }
 #main{
   font-family: "mono";
+  display: inline-block
 }
+#machines{
+  font-family: "mono";
+  font-size:8px;
+  display: inline-block
+}
+#items{
+  font-family: "mono";
+  font-size:11px;
+  display: inline-block
+}
+
 /*Makes Selection Invisible*/
 ::selection {
   background: #ffffff;
