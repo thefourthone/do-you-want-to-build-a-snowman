@@ -1,26 +1,31 @@
-var initStorage = function(){
+var initStorage = function(val){
   //machines
-  localStorage.E = 0; //(E)xtruder
-  localStorage.P = 0; //(P)ulverizer
-  localStorage.S = 0; //(S)ifter
-  localStorage.U = 0; //F(U)rnace
-  localStorage.G = 0; //(G)enerator
-  localStorage.T = 0; //(T)ree Farm
-  localStorage.F = 0; //(F)reezer
+  val = val || 0;
+  localStorage.E = val; //(E)xtruder
+  localStorage.P = val; //(P)ulverizer
+  localStorage.S = val; //(S)ifter
+  localStorage.U = val; //F(U)rnace
+  localStorage.G = val; //(G)enerator
+  localStorage.T = val; //(T)ree Farm
+  localStorage.D = val; //(D)eHydrator
+  localStorage.F = val; //(F)reezer
   
   //building
-  localStorage.C = 0; //(C)hest
-  localStorage.I = 0; //(I)nput
-  localStorage.O = 0; //(O)utput
+  localStorage.C = val; //(C)hest
+  localStorage.I = val; //(I)nput
+  localStorage.O = val; //(O)utput
   
   //Items
-  localStorage.r = 0; //(r)ock
-  localStorage.w = 0; //(w)ood
-  localStorage.i = 0; //(i)ron
-  localStorage.c = 0; //(c)opper
-  localStorage.g = 0; //(g)ravel
-  localStorage.p = 0; //(p)ower
-  localStorage.s = 0; //(s)now
+  localStorage.r = val; //(r)ock
+  localStorage.w = val; //(w)ood
+  localStorage.h = val; //(h)2o
+  localStorage.t = val; //(t)ree
+  localStorage.o = val; //(o)re
+  localStorage.i = val; //(i)ron
+  localStorage.c = val; //(c)opper
+  localStorage.g = val; //(g)ravel
+  localStorage.p = val; //(p)ower
+  localStorage.s = val; //(s)now
 };
 
 var updateStorage = function(){
@@ -33,6 +38,7 @@ var updateStorage = function(){
   'F(U)rnace'    + ':' + localStorage.U + '\n' +
   '(G)enerator'  + ':' + localStorage.G + '\n' +
   '(T)ree Farm'  + ':' + localStorage.T + '\n' +
+  '(D)ehydrator' + ':' + localStorage.T + '\n' +
   '(F)reezer'    + ':' + localStorage.F + '\n';
   
   var second =
@@ -43,6 +49,9 @@ var updateStorage = function(){
   var last =
   '(r)ock'   + ':' + localStorage.r + '\n' +
   '(w)ood'   + ':' + localStorage.w + '\n' +
+  '(h)2o'    + ':' + localStorage.h + '\n' +
+  '(t)ree'   + ':' + localStorage.t + '\n' +
+  '(o)re'    + ':' + localStorage.o + '\n' +
   '(i)ron'   + ':' + localStorage.i + '\n' +
   '(c)opper' + ':' + localStorage.c + '\n' +
   '(g)ravel' + ':' + localStorage.g + '\n' +
@@ -53,3 +62,18 @@ var updateStorage = function(){
   items.innerText = last;
 };
 updateStorage();
+
+
+var updateConfig = function(){
+  var out = "";
+  for(var j = 0; j < world.machines.length;j++){
+    for(var k = 0;world.machines[j] && k < world.machines[j].length;k++){
+      if(world.machines[j][k]&&machines[world.machines[j][k].type]){
+        var temp = world.machines[j][k];
+        out += '<div>Type: ' + temp.type + ' Loc: ' + temp.x + ',' + temp.y +
+        '<input id="'+temp.x+','+temp.y+'"type="text"></input></div>';
+      }
+    }
+  }
+  document.getElementById('config').innerHTML = out;
+};

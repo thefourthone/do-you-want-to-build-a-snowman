@@ -6,6 +6,7 @@ main.onkeydown = function(e){
   }
   if(e.shiftKey){
     var back;
+    var first = grabData(main);
     switch(e.keyCode){
       case 32:            //space
         back = type(BLANK);
@@ -22,28 +23,48 @@ main.onkeydown = function(e){
       case 40:            //down
         back = type(DOWN);
         break;
-      case 51:            //hash
-        back = type(PIPE);
-        break;
     }
-    if(e.keyCode > 64 && e.keyCode < 91){ //a = 65, z = 90
+    if(back){
+      var second = grabData(main);
+      var loc = compare(first,second);
+      if(loc){
+        world.machines[loc.x][loc.y]=undefined;
+      }
+    }
+    if(e.keyCode === 51){
+      back = type('#');
+      var second = grabData(main);
+      var loc = compare(first,second);
+      makeMachine('#',loc.x,loc.y);
+    }
+    if((e.keyCode > 64 && e.keyCode < 91)){ //a = 65, z = 90
       if(!validate(e.keyCode))return;
       var char = String.fromCharCode(e.keyCode);
       localStorage[char] = parseInt(localStorage[char])-1;
-      console.log(char);
       back = type(char);
+      var second = grabData(main);
+      var loc = compare(first,second);
+      makeMachine(char,loc.x,loc.y);
     }
     if(back && localStorage[back]){
-      console.log(back,localStorage[back]);
       localStorage[back] = parseInt(localStorage[back])+1;
     }
   }
 };
-var str = ['************************',
-           '************************',
-           '***CU*******************',
-           '************************',
-           '************************'];
+var str = ['***********************************',
+           '***********************************',
+           '***********************************',
+           '***********************************',
+           '***********************************',
+           '***********************************',
+           '***********************************',
+           '***********************************',
+           '***********************************',
+           '***********************************',
+           '***********************************',
+           '***********************************',
+           '***********************************',
+           '***********************************'];
 main.innerText = str.join('\n');
 
 /* grabs data from a text box */
@@ -67,7 +88,18 @@ function type(char){
     range.setStart(sel.anchorNode, off+1);
     range.setEnd(sel.anchorNode, off+1);
     sel.removeAllRanges();
-    sel.addRange(range);                  //set it equal
+    sel.addRange(range);                //set it equal
     return out;
   }
 }
+var compare = function(a,b){
+  for(var i = 0; i < a.length;i++){
+    if(a[i]!==b[i]){
+      for(var j = 0; j < a[i].length;j++){
+        if(a[i][j]!==b[i][j]){
+          return {x:j,y:i};
+        }
+      }
+    }
+  }
+};

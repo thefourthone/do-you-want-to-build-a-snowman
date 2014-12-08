@@ -2,19 +2,18 @@
   font-family: "mono";
   src: url(UbuntuMono.ttf) format("truetype");
 }
-#main{
+.con {
   font-family: "mono";
-  display: inline-block
+  display: inline-block;
+  border: 5px solid;
+  font-size:12px;
 }
+
 #machines{
-  font-family: "mono";
   font-size:8px;
-  display: inline-block
 }
 #items{
-  font-family: "mono";
   font-size:11px;
-  display: inline-block
 }
 
 /*Makes Selection Invisible*/
